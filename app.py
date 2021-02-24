@@ -23,11 +23,16 @@ def photo():
     photo_enable = request.args.get(key='photo')
     print(str(photo_enable))
     if(str(photo_enable)=="ON"):
-        camera = PiCamera()
-        sleep(5)
-        camera.start_preview()
-        camera.capture('./image.jpg')
-        camera.stop_preview()
+        try:
+            camera = PiCamera()
+            sleep(5)
+            camera.start_preview()
+            camera.capture('./image.jpg')
+            camera.stop_preview()
+            camera.close()
+        except:
+            print("camera_fail")
     return "successful"
 if __name__ == '__main__':
+    
     app.run(debug=True, host='0.0.0.0', port=2224)
