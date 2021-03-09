@@ -1,22 +1,30 @@
 # -*- coding: UTF-8 -*-
-from flask import Flask ,request
+from flask import Flask ,request,make_response
 from flask import render_template
 from picamera import PiCamera
 from time import sleep
 import requests
+import os 
 app = Flask(__name__)
-"""
-@app.route('/')
-def index():
-    return 'Hello ATCA!!'    #回傳字串，讓使用看到
-
-"""
+IMG_PATH="/home/pi/0Python/AICS_LINE_CONTROL/image.jpg"
 @app.route("/hi")
 def say_hello():
     name = request.args.get(key='name')
     print(str(name))
     return "Hello"+str(name)
 
+@app.route("/photo_page")
+def upload_photo():
+    camera = PiCamera()
+    sleep(5)
+    camera.start_preview()
+    camera.capture('./image.jpg')
+    camera.stop_preview()
+    camera.close()
+    image_data = open(IMG_PATH,"rb").read()
+    response = make_response(image_data)
+    response.headers['Content-Type'] = 'image/jpg'
+    return response
 @app.route("/")
 def photo():
     if request.method=="GET":
@@ -30,9 +38,15 @@ def photo():
                 camera.capture('./image.jpg')
                 camera.stop_preview()
                 camera.close()
+                return "Camera_success"
             except:
-                print("camera_fail")
-        return "successful"
+                return "Camera_fail"
+        else:
+            return "NO camera"
+            pass
+    else:
+        pass
+        return "Not get response"
 if __name__ == '__main__':
     
     app.run(debug=True, host='0.0.0.0', port=2224)
