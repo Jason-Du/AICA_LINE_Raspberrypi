@@ -13,7 +13,7 @@ def say_hello():
     print(str(name))
     return "Hello"+str(name)
 
-@app.route("/photo_page")
+@app.route("/photo_page")#串流照片
 def upload_photo():
     camera = PiCamera()
     sleep(5)
@@ -26,7 +26,7 @@ def upload_photo():
     response.headers['Content-Type'] = 'image/jpg'
     return response
 @app.route("/")
-def photo():
+def photo():#控制樹梅派胎照
     if request.method=="GET":
         photo_enable = request.args.get(key='photo')
         print(str(photo_enable))
